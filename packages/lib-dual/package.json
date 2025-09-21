@@ -1,0 +1,25 @@
+{
+  "name": "@poc/lib-dual",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/esm/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.esm.json && node ./scripts/postbuild.mjs && tsc -p tsconfig.cjs.json",
+    "clean": "rm -rf dist"
+  }
+}

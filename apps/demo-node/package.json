@@ -1,0 +1,14 @@
+{
+  "name": "demo-node",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@poc/lib-basic": "0.0.0",
+    "@poc/lib-dual": "0.0.0"
+  },
+  "scripts": {
+    "start": "node src/index.mjs",
+    "require-test": "node src/require-test.cjs"
+  }
+}
