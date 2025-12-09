@@ -1,0 +1,45 @@
+name: changeset-check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  verify:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref }} --depth=1
+
+      - name: Block direct version edits in packages
+        run: |
+          set -euo pipefail
+          base="origin/${{ github.base_ref }}"
+          CHANGED_PKG_JSON=$(git diff --name-only "$base"...HEAD | grep -E '^packages/.+/package.json$' || true)
+          if [ -n "$CHANGED_PKG_JSON" ]; then
+            if git diff "$base"...HEAD -- $CHANGED_PKG_JSON | grep -E '^[+-]\s*"version"\s*:' >/dev/null; then
+              echo 'packages/**/package.json の version はリリースPR以外で変更しないでください。' >&2
+              exit 1
+            fi
+          fi
+
+      - name: Require a changeset when code changed
+        run: |
+          set -euo pipefail
+          base="origin/${{ github.base_ref }}"
+          CHANGED_CODE=$(git diff --name-only "$base"...HEAD | grep -E '^(packages|apps)/' | grep -vE '\.(md|MD)$' || true)
+          HAS_CHANGESET=$(git diff --name-only "$base"...HEAD | grep -E '^\.changeset/.+\.md$' || true)
+          if [ -n "$CHANGED_CODE" ] && [ -z "$HAS_CHANGESET" ]; then
+            echo 'コード変更には .changeset/*.md を追加してください。Docs/Choreのみは除外してください。' >&2
+            exit 1
+          fi
+
