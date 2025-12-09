@@ -25,3 +25,15 @@ Changesets を使って `packages/*` のバージョン管理と CHANGELOG 生�
 - `@poc/lib-react` は peerDependencies を持つため、publish 前に peer のバージョン整合を確認してください。
 - `packages/lib-dual` は ESM/CJS の二系統を出力するため、リリース前に `npm run build -w lib-dual` で両方のビルドが通るかを確認してください。
 - プルリク作成時は `.changeset` のファイルも必ずコミットして、次のバージョン反映に含めるようにしてください。
+
+## `.changeset/config.json` の設定項目
+このリポジトリに配置している `config.json` の主なキーと役割をまとめます。
+
+- `$schema`: 設定ファイルのスキーマ URL。エディタでの補完やバリデーションに利用されます。
+- `changelog`: `false` のため `changeset version` 実行時に CHANGELOG を生成しません。別ツールでリリースノートを管理する前提の設定です。
+- `commit`: `false` のため version 実行後の変更を自動コミットしません。手動コミットで PR ルールを維持します。
+- `fixed` / `linked`: 空配列で設定しており、バージョンをまとめて固定・連動させるパッケージグループはありません。
+- `access`: `restricted` としており、`changeset publish` で公開されるパッケージのアクセス権を非公開（スコープ付き private 扱い）にします。
+- `baseBranch`: `main` を基準ブランチとして release の計算を行います。メインブランチにマージされた changeset がリリース対象です。
+- `updateInternalDependencies`: `patch` 指定により、同一ワークスペース内で依存先が patch/minor/major 更新された場合に依存パッケージを自動で patch バンプします。
+- `ignore`: 空配列なので全パッケージがリリース対象。特定パッケージを除外したい場合はここに名前を追加します。
