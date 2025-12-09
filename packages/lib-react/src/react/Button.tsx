@@ -1,4 +1,4 @@
-import type { ReactNode, CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export type ButtonProps = {
   label?: string;
@@ -10,7 +10,7 @@ export type ButtonProps = {
 
 export function Button({ label, onClick, variant = 'primary', className, children }: ButtonProps) {
   const base: CSSProperties = {
-    padding: '8px 12px',
+    padding: '8px 10px',
     borderRadius: 6,
     border: '1px solid',
     cursor: 'pointer',
