@@ -26,8 +26,26 @@ js/ts ライブラリからの module export（関数や React UI コンポー�
   - `npm run require-test -w demo-node`（CJS `require` 動作を確認）
 
 - React (Vite)
-  - `npm run dev -w demo-react`（または `pnpm -C apps/demo-react dev`）
+ - `npm run dev -w demo-react`（または `pnpm -C apps/demo-react dev`）
   - ブラウザ: http://localhost:5173
+
+---
+
+## Changesets の基本的な流れ
+
+このリポジトリでは Changesets で `packages/*` のバージョン管理を行うことを想定しています。以下は最小限の手順です（詳細は [`.changeset/README.md`](./.changeset/README.md) を参照）。
+
+1. セットアップ
+   - `npm install -D @changesets/cli` を実行して CLI を導入。
+   - `.changeset/config.json` が既に配置されています。
+2. changeset の作成
+   - `npx changeset` を実行し、例として `@poc/lib-basic` と `@poc/lib-dual` を patch で選択。
+   - 生成された `.changeset/*.md` にサマリーを追記する（`sample-change.md` をサンプルとして収録済み）。
+3. バージョン反映と配布
+   - `npx changeset version` で各パッケージの `package.json` を更新。
+   - `npm run build` の後に `npx changeset publish` で npm 等へ公開（公開不要なら version までで完了）。
+
+Changesets は複数パッケージの変更を一つのリリース単位にまとめられるため、`packages/lib-react` と `packages/lib-dual` を同時に更新するようなケースで役立ちます。
 
 ---
 
